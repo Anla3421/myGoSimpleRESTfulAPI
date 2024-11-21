@@ -1,0 +1,160 @@
+basePath: /
+definitions:
+  models.ErrorResponse:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+  models.User:
+    properties:
+      id:
+        type: integer
+      phone:
+        type: string
+      username:
+        type: string
+    required:
+    - phone
+    - username
+    type: object
+  models.UserRequest:
+    properties:
+      birthday:
+        example: "2012-01-01"
+        type: string
+      phone:
+        example: 0987-123456
+        type: string
+      username:
+        example: derek
+        type: string
+    required:
+    - birthday
+    - phone
+    - username
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: 這是一個用戶管理服務的API文檔
+  title: User Service API
+  version: "1.0"
+paths:
+  /api/users:
+    get:
+      description: 獲取系統中所有用戶的列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      summary: 獲取所有用戶
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: 創建新用戶
+      parameters:
+      - description: 用戶信息
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: 創建用戶
+      tags:
+      - users
+  /api/users/{id}:
+    delete:
+      description: 刪除指定用戶
+      parameters:
+      - description: 用戶ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: 刪除用戶
+      tags:
+      - users
+    get:
+      description: 根據ID獲取用戶信息
+      parameters:
+      - description: 用戶ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: 獲取單個用戶
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: 更新指定用戶的所有信息
+      parameters:
+      - description: 用戶ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 用戶信息
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: 更新用戶
+      tags:
+      - users
+swagger: "2.0"
